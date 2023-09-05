@@ -1,0 +1,30 @@
+version: '3'
+services:
+  php:
+    image: php:8.1-apache-bullseye
+    container_name: php
+    ports:
+      - "8080:80"
+    volumes:
+      - ./htdocs:/var/www/html/
+  database:
+    image: mysql:5.7
+    container_name: database
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    restart: always
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    ports:
+      - "8090:80"
+    depends_on:
+      - database
+    environment:
+      PMA_HOST: database
+    restart: always
